@@ -1,0 +1,252 @@
+
+service: ContentServices${self:custom.config.serviceSuffix}
+
+custom:
+  config: ${file(../../serverless-config_generated.json)}
+  functionPrefix: ${self:custom.config.stage}-${self:service}-
+
+plugins:
+  - serverless-delete-loggroups
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  stage: ${self:custom.config.stage}
+  profile: serverless-dev
+  region: us-east-1
+  role: arn:aws:iam::056701433599:role/lambda_basic_execution
+  cfLogs: true
+
+package:
+  include: []
+  exclude:
+    - '*.ts'
+
+functions:
+  authorizerFunc:
+    name: ${self:custom.functionPrefix}authorizerFunc
+    handler: lambda-functions/authorizer-func/handler_generated.handler
+
+  createBoard:
+    name: ${self:custom.functionPrefix}createBoard
+    handler: lambda-functions/create-board/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/boards
+          method: post
+          cors: true
+          authorizer: authorizerFunc
+
+  createLane:
+    name: ${self:custom.functionPrefix}createLane
+    handler: lambda-functions/create-lane/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/lanes
+          method: post
+          cors: true
+          authorizer: authorizerFunc
+
+  createTask:
+    name: ${self:custom.functionPrefix}createTask
+    handler: lambda-functions/create-task/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/tasks
+          method: post
+          cors: true
+          authorizer: authorizerFunc
+
+  deleteBoard:
+    name: ${self:custom.functionPrefix}deleteBoard
+    handler: lambda-functions/delete-board/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/boards/{boardId}
+          method: delete
+          cors: true
+          authorizer: authorizerFunc
+
+  deleteLane:
+    name: ${self:custom.functionPrefix}deleteLane
+    handler: lambda-functions/delete-lane/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/lanes/{laneId}
+          method: delete
+          cors: true
+          authorizer: authorizerFunc
+
+  deleteTask:
+    name: ${self:custom.functionPrefix}deleteTask
+    handler: lambda-functions/delete-task/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/tasks/{taskId}
+          method: delete
+          cors: true
+          authorizer: authorizerFunc
+
+  editLane:
+    name: ${self:custom.functionPrefix}editLane
+    handler: lambda-functions/edit-lane/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/lanes/{laneId}
+          method: patch
+          cors: true
+          authorizer: authorizerFunc
+
+  generateHttpError:
+    name: ${self:custom.functionPrefix}generateHttpError
+    handler: lambda-functions/generate-http-error/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/echo/error/{errorCode}
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+
+  getBoardById:
+    name: ${self:custom.functionPrefix}getBoardById
+    handler: lambda-functions/get-board-by-id/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/boards/{boardId}
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+
+  getAnnouncementsForUser:
+    name: ${self:custom.functionPrefix}getAnnouncementsForUser
+    handler: lambda-functions/get-announcements-for-user/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/teams/{teamId}/users/{userId}/announcements
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+
+  getBoardsForUser:
+    name: ${self:custom.functionPrefix}getBoardsForUser
+    handler: lambda-functions/get-boards-for-user/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/teams/{teamId}/users/{userId}/boards
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+
+  getChannelsForUser:
+    name: ${self:custom.functionPrefix}getChannelsForUser
+    handler: lambda-functions/get-channels-for-user/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/teams/{teamId}/users/{userId}/channels
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+
+  getDiscussionsForUser:
+    name: ${self:custom.functionPrefix}getDiscussionsForUser
+    handler: lambda-functions/get-discussions-for-user/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/teams/{teamId}/users/{userId}/discussions
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+
+  getLaneById:
+    name: ${self:custom.functionPrefix}getLaneById
+    handler: lambda-functions/get-lane-by-id/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/lanes/{laneId}
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+
+  getTaskById:
+    name: ${self:custom.functionPrefix}getTaskById
+    handler: lambda-functions/get-task-by-id/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/tasks/{taskId}
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+
+  getTasksForUser:
+    name: ${self:custom.functionPrefix}getTasksForUser
+    handler: lambda-functions/get-tasks-for-user/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/teams/{teamId}/users/{userId}/tasks
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+
+  getTasksInLane:
+    name: ${self:custom.functionPrefix}getTasksInLane
+    handler: lambda-functions/get-tasks-in-lane/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/lanes/{laneId}/tasks
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+
+  helloWorld:
+    name: ${self:custom.functionPrefix}helloWorld
+    handler: lambda-functions/hello-world/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/echo/hello-world
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+      - http:
+          path: /{apiVersion}/echo/hello-world
+          method: post
+          cors: true
+
+  inviteToBoard:
+    name: ${self:custom.functionPrefix}inviteToBoard
+    handler: lambda-functions/invite-to-board/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/boards/{boardId}/users/
+          method: put
+          cors: true
+          authorizer: authorizerFunc
+
+  removeFromBoard:
+    name: ${self:custom.functionPrefix}removeFromBoard
+    handler: lambda-functions/remove-from-board/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/boards/{boardId}/users/{userId}
+          method: delete
+          cors: true
+          authorizer: authorizerFunc
+
+  swurveTask:
+    name: ${self:custom.functionPrefix}swurveTask
+    handler: lambda-functions/swurve-task/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/lanes/{laneId}/tasks/{taskId}
+          method: patch
+          cors: true
+          authorizer: authorizerFunc
+
+  updateTask:
+    name: ${self:custom.functionPrefix}updateTask
+    handler: lambda-functions/update-task/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/tasks/{taskId}
+          method: patch
+          cors: true
+          authorizer: authorizerFunc

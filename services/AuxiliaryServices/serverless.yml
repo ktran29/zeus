@@ -1,0 +1,143 @@
+
+service: AuxiliaryServices${self:custom.config.serviceSuffix}
+
+custom:
+  config: ${file(../../serverless-config_generated.json)}
+  functionPrefix: ${self:custom.config.stage}-${self:service}-
+
+plugins:
+- serverless-delete-loggroups
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  stage: ${self:custom.config.stage}
+  profile: serverless-dev
+  region: us-east-1
+  role: arn:aws:iam::056701433599:role/lambda_basic_execution
+  cfLogs: true
+
+package:
+  include: []
+  exclude:
+    - '*.ts'
+
+functions:
+  authorizerFunc:
+    name: ${self:custom.functionPrefix}authorizerFunc
+    handler: lambda-functions/authorizer-func/handler_generated.handler
+
+  createChecklistItem:
+    name: ${self:custom.functionPrefix}createChecklistItem
+    handler: lambda-functions/create-checklist-item/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/checklistItem/
+          method: post
+          cors: true
+          authorizer: authorizerFunc
+
+  createComment:
+    name: ${self:custom.functionPrefix}createComment
+    handler: lambda-functions/create-comment/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/comments
+          method: post
+          cors: true
+          authorizer: authorizerFunc
+
+  deleteChecklistItem:
+    name: ${self:custom.functionPrefix}deleteChecklistItem
+    handler: lambda-functions/delete-checklist-item/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/checklistItem/{checklistItemId}
+          method: delete
+          cors: true
+          authorizer: authorizerFunc
+
+  deleteComment:
+    name: ${self:custom.functionPrefix}deleteComment
+    handler: lambda-functions/delete-comment/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/comments/{commentId}
+          method: delete
+          cors: true
+          authorizer: authorizerFunc
+
+  generateHttpError:
+    name: ${self:custom.functionPrefix}generateHttpError
+    handler: lambda-functions/generate-http-error/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/echo/error/{errorCode}
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+
+  getChecklistById:
+    name: ${self:custom.functionPrefix}getChecklistById
+    handler: lambda-functions/get-checklist-by-id/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/checklists/{checklistId}
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+
+  getChecklistItem:
+    name: ${self:custom.functionPrefix}getChecklistItemById
+    handler: lambda-functions/get-checklist-item-by-id/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/checklistItem/{checklistItemId}
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+
+  getCommentsInThread:
+    name: ${self:custom.functionPrefix}getCommentsInThread
+    handler: lambda-functions/get-comments-in-thread/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/comment-thread/{commentThreadId}/comments
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+
+  getCommentThreadById:
+    name: ${self:custom.functionPrefix}getCommentThreadById
+    handler: lambda-functions/get-comment-thread-by-id/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/comment-thread/{commentThreadId}
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+
+  helloWorld:
+    name: ${self:custom.functionPrefix}helloWorld
+    handler: lambda-functions/hello-world/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/echo/hello-world
+          method: get
+          cors: true
+          authorizer: authorizerFunc
+      - http:
+          path: /{apiVersion}/echo/hello-world
+          method: post
+          cors: true
+          authorizer: authorizerFunc
+
+  updateChecklistItem:
+    name: ${self:custom.functionPrefix}updateChecklistItem
+    handler: lambda-functions/update-checklist-item/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/checklistItem/{checklistItemId}
+          method: patch
+          cors: true
+          authorizer: authorizerFunc

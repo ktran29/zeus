@@ -1,0 +1,38 @@
+{
+  "name": "zeus",
+  "version": "0.0.0",
+  "description": "Zeus is the god of the Sky, Cloud, Rain, and Lightning, just like our backend ;)",
+  "main": "index.js",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "filehound": "~1.16.0",
+    "inquirer": "~2.0.0",
+    "json2yaml": "^1.1.0",
+    "jsonfile": "~2.4.0",
+    "jsonschema": "^1.1.1",
+    "promisify-node": "~0.4.0",
+    "shelljs": "~0.7.6",
+    "typescript": "^2.1.5",
+    "typson": "~0.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "preinstall": "npm install -g serverless@1.14.0",
+    "create-service": "node scripts/create-service.js",
+    "deploy-all": "npm run build-all && npm run deploy-all:already-built",
+    "deploy-all:already-built": "node scripts/deploy-all-services.js",
+    "build-all": "node scripts/build-all-services.js",
+    "setup": "npm install && node scripts/setup-project.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/tack-technologies-inc/zeus.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/tack-technologies-inc/zeus/issues"
+  },
+  "homepage": "https://gitlab.com/tack-technologies-inc/zeus#README"
+}

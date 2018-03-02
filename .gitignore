@@ -1,0 +1,17 @@
+# package directories
+node_modules
+
+# Serverless directories
+.serverless
+
+# generated files
+*_generated*
+
+# logs
+npm-debug.log
+
+# old directories
+aws-nodejs
+
+# shared duplicates
+services/*/shared

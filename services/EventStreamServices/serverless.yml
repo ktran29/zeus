@@ -1,0 +1,79 @@
+
+service: EventStreamServices${self:custom.config.serviceSuffix}
+
+custom:
+  config: ${file(../../serverless-config_generated.json)}
+  functionPrefix: ${self:custom.config.stage}-${self:service}-
+
+plugins:
+  - serverless-delete-loggroups
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  stage: ${self:custom.config.stage}
+  profile: serverless-dev
+  region: us-east-1
+  role: arn:aws:iam::056701433599:role/lambda_basic_execution
+  cfLogs: true
+
+package:
+  include: []
+  exclude:
+    - '*.ts'
+
+functions:
+  announcementListener:
+    name: ${self:custom.functionPrefix}announcementListener
+    handler: lambda-functions/announcement-listener/handler_generated.handler
+
+  boardListener:
+    name: ${self:custom.functionPrefix}boardListener
+    handler: lambda-functions/board-listener/handler_generated.handler
+
+  createNotification:
+    name: ${self:custom.functionPrefix}createNotification
+    handler: lambda-functions/create-notification/handler_generated.handler
+
+  channelListener:
+    name: ${self:custom.functionPrefix}channelListener
+    handler: lambda-functions/channel-listener/handler_generated.handler
+
+  checklistItemListener:
+    name: ${self:custom.functionPrefix}checklistItemListener
+    handler: lambda-functions/checklist-item-listener/handler_generated.handler
+
+  commentListener:
+    name: ${self:custom.functionPrefix}commentListener
+    handler: lambda-functions/comment-listener/handler_generated.handler
+
+  discussionListener:
+    name: ${self:custom.functionPrefix}discussionListener
+    handler: lambda-functions/discussion-listener/handler_generated.handler
+
+  helloWorld:
+    name: ${self:custom.functionPrefix}helloWorld
+    handler: lambda-functions/hello-world/handler_generated.handler
+    events:
+      - http:
+          path: /{apiVersion}/echo/hello-world
+          method: post
+      - http:
+          path: /{apiVersion}/echo/hello-world
+          method: get
+
+  laneListener:
+    name: ${self:custom.functionPrefix}laneListener
+    handler: lambda-functions/lane-listener/handler_generated.handler
+
+  objectUserMembershipListener:
+    name: ${self:custom.functionPrefix}objectUserMembershipListener
+    handler: lambda-functions/object-user-membership-listener/handler_generated.handler
+
+  taskListener:
+    name: ${self:custom.functionPrefix}taskListener
+    handler: lambda-functions/task-listener/handler_generated.handler
+
+  teamListener:
+    name: ${self:custom.functionPrefix}teamListener
+    handler: lambda-functions/team-listener/handler_generated.handler

@@ -1,0 +1,36 @@
+
+machine:
+  node:
+    version: 7.5
+
+dependencies:
+  pre:
+    - npm i serverless -g
+
+compile:
+  pre:
+    - printf "CircleCi\n" | npm run setup
+  override:
+    - npm run build-all
+
+test:
+  override:
+    - echo skipping tests because we havent implemented them yet...
+
+deployment:
+  production:
+    branch: production/release
+    commands:
+      - 'npm run deploy-all:already-built prod 3 && (./scripts/notify_deployment_success.sh prod ; exit 0) || (./scripts/notify_deployment_failure.sh prod ; exit 1)'
+  staging:
+    branch: staging/candidate
+    commands:
+      - 'npm run deploy-all:already-built staging 3 && (./scripts/notify_deployment_success.sh staging ; exit 0) || (./scripts/notify_deployment_failure.sh staging ; exit 1)'
+  development:
+    branch: develop/master
+    commands:
+      - 'npm run deploy-all:already-built dev 3 && (./scripts/notify_deployment_success.sh dev ; exit 0) || (./scripts/notify_deployment_failure.sh dev ; exit 1)'
+  config:
+    branch: /develop\/config\/.*/
+    commands:
+      - 'npm run deploy-all:already-built dev 3 && (./scripts/notify_deployment_success.sh dev ; exit 0) || (./scripts/notify_deployment_failure.sh dev ; exit 1)'
